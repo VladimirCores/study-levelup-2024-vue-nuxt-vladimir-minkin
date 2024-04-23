@@ -25,6 +25,15 @@ module.exports = {
         "max": 1
       }
     }],
-    "vue/mustache-interpolation-spacing": ["error", "always"]
+    "vue/mustache-interpolation-spacing": ["error", "always"],
+    "vue/singleline-html-element-content-newline": ["error", {
+      "ignoreWhenNoAttributes": false,
+      "ignoreWhenEmpty": true,
+      "externalIgnores": []
+    }],
+    "vue/multiline-html-element-content-newline": ["error", {
+      "ignoreWhenEmpty": true,
+      "allowEmptyLines": false
+    }]
   }
 }

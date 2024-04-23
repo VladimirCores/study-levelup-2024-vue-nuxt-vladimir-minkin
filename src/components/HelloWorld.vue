@@ -1,16 +1,39 @@
-<script setup lang="ts">
-import { ref } from 'vue'
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { decodeForUrlFormat } from '~/utils/StringUtils.ts';
 
-defineProps<{ msg: string }>()
-
-const count = ref(0)
+export default defineComponent({
+  props: {
+    msg: {
+      type: String,
+      default: ''
+    },
+  },
+  data: () => ({
+    count: 0,
+    message: '',
+  }),
+  created() {
+    console.log('> HelloWorld -> created:', { msg: this.msg });
+    this.message = this.msg;
+  },
+  methods: { decodeForUrlFormat }
+});
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <h1>
+    {{ msg ? decodeForUrlFormat(msg) : 'no message' }}
+  </h1>
+  <input v-model="message">
+  <div>
+    {{ message }}
+  </div>
 
   <div class="card">
-    <button type="button" @click="count++">counter is {{ count }}</button>
+    <button type="button" @click="count++">
+      counter is {{ count }}
+    </button>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
@@ -19,20 +42,17 @@ const count = ref(0)
 
   <p>
     Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
+    <a
+      href="https://vuejs.org/guide/quick-start.html#local"
+      target="_blank"
+    >create-vue</a>, the official Vue + Vite starter
   </p>
   <p>
     Install
     <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
     in your IDE for a better DX
   </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <p style="color: #888;">
+    Click on the Vite and Vue logos to learn more
+  </p>
 </template>
-
-<style scoped>
-.read-the-docs {
-  color: #888;
-}
-</style>

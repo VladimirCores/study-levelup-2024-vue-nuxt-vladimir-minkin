@@ -6,7 +6,12 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      'sans': 'PT Sans, sans-serif',
+    }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };
 

@@ -17,6 +17,7 @@ module.exports = {
     // 'vue/no-unused-vars': 'error'
     semi: ['error', 'always'],
     quotes: ['error', 'single'],
+    "vue/multi-word-component-names": 0,
     "vue/max-attributes-per-line": ["error", {
       "singleline": {
         "max": 3

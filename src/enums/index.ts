@@ -4,3 +4,9 @@ export enum LoadingState {
   SUCCESS,
   ERROR
 }
+
+export enum NotificationType {
+  INFO,
+  ERROR,
+  SUCCESS,
+}

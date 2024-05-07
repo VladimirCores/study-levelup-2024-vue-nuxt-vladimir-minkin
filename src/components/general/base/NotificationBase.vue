@@ -27,5 +27,13 @@ defineEmits(['close']);
       :class="`text-${color}-600 hover:text-${color}-700`"
       @click="$emit('close')"
     />
+    <div class="hidden colors" />
   </div>
 </template>
+<style scoped>
+.colors {
+  @apply bg-blue-100 border-blue-200 text-blue-600 text-blue-700 text-blue-800;
+  @apply bg-red-100 border-red-200 text-red-600 text-red-700 text-red-800;
+  @apply bg-green-100 border-green-200 text-green-600 text-green-700 text-green-800;
+}
+</style>

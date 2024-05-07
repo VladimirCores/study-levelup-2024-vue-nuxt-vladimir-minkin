@@ -1,5 +1,6 @@
-import { createServer, Response } from 'miragejs';
+import { createServer, Factory, Model, Response } from 'miragejs';
 import { TodosVO, TodoVO } from '~/model';
+import { faker } from '@faker-js/faker';
 
 const generateError = (msg: string) => {
   const headers = {};
@@ -8,10 +9,18 @@ const generateError = (msg: string) => {
 };
 
 const runServer = () => createServer({
-  // models: {
-  //   todos: Model.extend<TodoVO>({ id: '', text: '', completed: false }),
-  // },
-  routes() {
+  models: {
+    todos: Model.extend<TodoVO[]>([]),
+  },
+  factories: {
+    todo: Factory.extend<TodoVO>({
+      id(i: number) { return i.toString(); },
+      text() { return faker.lorem.text(); },
+      createdAt() { return Date.now(); },
+      completed() { return false; },
+    })
+  },
+  routes() {;
     this.namespace = 'api';
 
     this.get('/todos', () => {

@@ -1,5 +1,7 @@
 <template>
-  <span class="loader" />
+  <div>
+    <span class="loader" />
+  </div>
 </template>
 <style scoped>
 .loader {

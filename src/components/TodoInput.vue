@@ -1,19 +1,32 @@
 <script setup lang="ts">
 import Strings from '~/constants/Strings.ts';
 import ButtonPrimary from '~/components/buttons/ButtonPrimary.vue';
-
-defineProps<{ locked: boolean }>();
-const emits = defineEmits<{ create: [] }>();
+import { ref } from 'vue';
+const props = defineProps<{
+  locked: boolean,
+  isEditable: boolean
+}>();
+const emits = defineEmits<{
+  create: [],
+  edit: [],
+  change: [string],
+}>();
 const input = defineModel<string>('text');
+const domInput = ref<HTMLInputElement | null>(null);
 
 const onButtonCreateAction = () => {
   console.log('> TodoInput -> onButtonCreateAction');
-  emits('create');
+  props.isEditable ? emits('edit') : emits('create');
+};
+const onInput = () => {
+  console.log('> TodoInput -> onInput:', domInput.value!.value);
+  emits('change', domInput.value!.value);
 };
 </script>
 <template>
-  <div class="flex flex-row space-x-2 items-center">
+  <div class="flex flex-row space-x-3 items-center">
     <input
+      ref="domInput"
       v-model="input"
       :disabled="locked"
       type="text"
@@ -26,8 +39,15 @@ const onButtonCreateAction = () => {
         focus:border-blue-500 focus:ring-blue-500
         disabled:opacity-50 disabled:pointer-events-none
       "
+      @input="onInput"
       @keyup.enter="onButtonCreateAction"
     >
-    <ButtonPrimary :disabled="locked" :title="Strings.TODO_BTN__CREATE" @action="onButtonCreateAction" />
+    <ButtonPrimary
+      :disabled="locked"
+      :title="isEditable ? Strings.TODO_BTN__EDIT : Strings.TODO_BTN__CREATE"
+      :class="isEditable && '!bg-amber-500'"
+      @action="onButtonCreateAction"
+    />
+    <slot />
   </div>
 </template>

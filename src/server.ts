@@ -20,11 +20,11 @@ const runServer = () => createServer({
       completed() { return false; },
     })
   },
-  routes() {;
+  routes() {
     this.namespace = 'api';
 
     this.get('/todos', () => {
-      if (Math.random() < 0.5) return generateError('Server did not respond');
+      // if (Math.random() < 0.5) return generateError('Server did not respond');
       return {
         list: [
           { id: '1', text: 'Inception', completed: false, createdAt: Date.now() },

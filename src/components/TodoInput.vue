@@ -4,6 +4,7 @@ import ButtonPrimary from '~/components/buttons/ButtonPrimary.vue';
 import { ref } from 'vue';
 const props = defineProps<{
   locked: boolean,
+  isActionPossible?: boolean,
   isEditable: boolean
 }>();
 const emits = defineEmits<{
@@ -43,7 +44,7 @@ const onInput = () => {
       @keyup.enter="onButtonCreateAction"
     >
     <ButtonPrimary
-      :disabled="locked"
+      :disabled="locked || !isActionPossible"
       :title="isEditable ? Strings.TODO_BTN__EDIT : Strings.TODO_BTN__CREATE"
       :class="isEditable && '!bg-amber-500'"
       @action="onButtonCreateAction"

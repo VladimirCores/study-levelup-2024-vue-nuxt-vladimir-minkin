@@ -125,7 +125,8 @@ const onTodoItemEdit = (index: number) => {
   console.log('> App -> onTodoItemEdit', { index });
   const todoVO = todos.value[index];
   if (!todoVO) return alert(`There is not todo with index: ${index}`);
-  if (!!selectedTodo.value && selectedTodo.value === todoVO) {
+  const shouldDeselectCurrentTodo = !!selectedTodo.value && selectedTodo.value === todoVO;
+  if (shouldDeselectCurrentTodo) {
     selectedTodo.value = undefined;
     todoText.value = '';
     return;
@@ -165,6 +166,7 @@ watch(todoText, (value) => {
       v-model:text="todoText"
       :locked="isInputLocked"
       :is-editable="isEditTodoEnabled"
+      :is-action-possible="!selectedTodo || (selectedTodo && isSelectedTodoChanged)"
       @create="onTodoInputCreate"
       @edit="onTodoInputEdit"
       @change="onTodoInputChange"

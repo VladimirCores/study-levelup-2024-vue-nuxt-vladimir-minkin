@@ -14,11 +14,12 @@ import Storage from '~/constants/Storage.ts';
 import { useRouter } from 'vue-router';
 import { debounce } from '~/utils/TimerUtils.ts';
 import { PROVIDE_KEY_TODOS } from '~/constants';
+import TodosStore from '~/stores/todosStore.ts';
 
 const router = useRouter();
 
 const initialError = ref<Error | undefined>(undefined);
-const todos = ref<TodosVO>(inject(PROVIDE_KEY_TODOS) as TodosVO);
+const todos = ref<TodosVO>((inject(PROVIDE_KEY_TODOS) as TodosStore).list as TodosVO);
 const todosFiltered = ref<TodosVO>([]);
 const selectedTodo = ref<TodoVO | undefined>(undefined);
 const todoText = ref<string>('');

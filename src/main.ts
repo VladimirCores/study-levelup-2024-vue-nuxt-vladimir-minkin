@@ -2,7 +2,7 @@ import '~/style.css';
 
 import { createApp } from 'vue';
 import App from '~/App.vue';
-import todosStore from '~/stores/todosStore';
+import TodosStore from '~/stores/todosStore';
 import {
   PROVIDE_KEY_SETTINGS,
   PROVIDE_KEY_TODOS
@@ -20,7 +20,7 @@ const app = createApp(App);
 app.use(router);
 
 app.provide(PROVIDE_KEY_SETTINGS, { theme: THEME });
-app.provide(PROVIDE_KEY_TODOS, todosStore.list);
+app.provide(PROVIDE_KEY_TODOS, new TodosStore());
 
 app.mount(document.getElementById('app') as Element);
 

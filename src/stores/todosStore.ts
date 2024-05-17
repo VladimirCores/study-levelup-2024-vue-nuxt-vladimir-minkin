@@ -1,7 +1,11 @@
-const list = <any>[];
+import { TodoVO } from '~/model';
 
-const todosStore = {
-  list
-};
+const list = <TodoVO>[];
 
-export default todosStore;
+class TodoState {
+  get list() {
+    return list;
+  }
+}
+
+export default TodoState;

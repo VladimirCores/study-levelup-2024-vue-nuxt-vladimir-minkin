@@ -11,12 +11,14 @@ import THEME from '~/assets/settings/theme.json';
 
 import runServer from '~/server.ts';
 import router from '~/router.ts';
+import { createPinia } from 'pinia';
 
 if (process.env.NODE_ENV === 'development') {
   runServer();
 }
 const app = createApp(App);
 
+app.use(createPinia());
 app.use(router);
 
 app.provide(PROVIDE_KEY_SETTINGS, { theme: THEME });

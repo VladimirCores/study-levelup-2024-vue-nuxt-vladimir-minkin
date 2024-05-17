@@ -16,9 +16,10 @@ defineEmits<{
   delete: [number],
   reload: []
 }>();
+const generateUniqueKey = (id: string = '') => `${Date.now() + id}`;
 </script>
 <template>
-  <div class="flex flex-row w-full">
+  <div :key="generateUniqueKey()" class="flex flex-row w-full">
     <div v-if="LoadingState.LOADING === stateInitial">
       {{ Strings.TODO_STATE__LOADING }}
     </div>
@@ -43,7 +44,7 @@ defineEmits<{
       <ul v-if="list.length" class="flex flex-col space-y-1 w-full">
         <template
           v-for="(todo, index) in (list as TodosVO)"
-          :key="todo.id"
+          :key="generateUniqueKey(todo.id)"
         >
           <RouterLink :to="`${getTodoItemRouteById(todo.id!)}`">
             <TodoItem

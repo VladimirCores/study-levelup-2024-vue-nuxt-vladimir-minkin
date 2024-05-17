@@ -1,6 +1,6 @@
-import { TodoVO } from '~/model';
+import { TodosVO } from '~/model';
 
-const list = <TodoVO>[];
+const list = <TodosVO>[];
 
 class TodoState {
   get list() {

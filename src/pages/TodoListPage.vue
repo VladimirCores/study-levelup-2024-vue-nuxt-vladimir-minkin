@@ -15,6 +15,7 @@ import { useRouter } from 'vue-router';
 import { debounce } from '~/utils/TimerUtils.ts';
 import { PROVIDE_KEY_TODOS } from '~/constants';
 import TodosStore from '~/stores/todosStore.ts';
+import { askToConfirmUserAboutRemovalOfEnteredText } from '~/utils/ConfirmUtils.ts';
 
 const router = useRouter();
 
@@ -53,9 +54,7 @@ const fetchInitialData = () => {
       return data.list as TodosVO;
     })
     .then((list: TodosVO) => {
-      const newTodos = list.filter((item) => {
-        return !todos.value.find((todo => todo.id === item.id));
-      });
+      const newTodos = list.filter((item) => { return !todos.value.find((todo => todo.id === item.id)); });
       todos.value.push(...newTodos);
       updateFilteredTodoList();
       stateInitial.value = LoadingState.SUCCESS;
@@ -140,29 +139,29 @@ const onTodoItemComplete = (index: number) => {
   }
 };
 
+const setSelectedTodo = (input: TodoVO | undefined) => {
+  selectedTodo.value = input;
+  todoText.value = selectedTodo.value?.text || '';
+};
+
+const shouldDeselectCurrentTodo = (todoVO: TodoVO | undefined) => !!selectedTodo.value && selectedTodo.value === todoVO;
+
 const onTodoItemEdit = (index: number) => {
   console.log('> App -> onTodoItemEdit', { index });
   const todoVO = todos.value[index];
   if (!todoVO) return alert(`There is not todo with index: ${index}`);
-  const shouldDeselectCurrentTodo = !!selectedTodo.value && selectedTodo.value === todoVO;
-  if (shouldDeselectCurrentTodo) {
-    selectedTodo.value = undefined;
-    todoText.value = '';
-    return;
+  if (shouldDeselectCurrentTodo(todoVO)) {
+    return setSelectedTodo(undefined);
   }
-  const isInputEmpty = !todoText.value;
-  console.log('> isSelectedTodoChanged.value = ', isSelectedTodoChanged.value);
-  if (isInputEmpty || (!isInputEmpty && !isSelectedTodoChanged.value) || (!isInputEmpty && confirm('Text you have entered will be removed. Do you want to continue?')))
-  {
-    selectedTodo.value = todoVO;
-    todoText.value = selectedTodo.value.text;
+  // console.log('> isSelectedTodoChanged.value = ', isSelectedTodoChanged.value);
+  if (askToConfirmUserAboutRemovalOfEnteredText(todoText.value, isSelectedTodoChanged.value)) {
+    setSelectedTodo(todoVO);
   }
 };
 
 const onTodoItemDelete = (index: number) => {
   console.log('> App -> onTodoItemDelete', { index });
-  if (confirm(`Are you sure to delete todo #${index+1}`))
-  {
+  if (confirm(`Are you sure to delete todo #${index+1}`)) {
     todos.value.splice(index, 1);
   }
 };

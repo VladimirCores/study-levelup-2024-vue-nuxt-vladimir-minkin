@@ -35,7 +35,7 @@ defineEmits(['complete', 'edit', 'delete']);
         icon="tabler:edit"
         class="text-lg text-gray-300 hover:text-blue-500 cursor-pointer"
         :class="{ 'text-blue-500': isSelected }"
-        @click="$emit('edit')"
+        @click.prevent.stop="$emit('edit')"
       />
       <Icon
         icon="tabler:trash"

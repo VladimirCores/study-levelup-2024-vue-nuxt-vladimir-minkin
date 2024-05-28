@@ -5,12 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev-graphql": "vite --mode graphql",
     "lint": "eslint ./src/**/*.{ts,vue} --fix",
     "build": "yarn lint && vue-tsc && vite build",
     "serve": "yarn build && pm2 startOrRestart ecosystem.config.cjs",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.4",
+    "@vue/apollo-composable": "^4.0.2",
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "4"

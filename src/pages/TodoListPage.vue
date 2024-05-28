@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, inject, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { LoadingState, NotificationType } from '~/enums';
 import TodoInput from '~/components/TodoInput.vue';
 
@@ -17,8 +17,13 @@ import { askToConfirmUserAboutRemovalOfEnteredText } from '~/utils/ConfirmUtils.
 import { useTodosStore } from '~/stores';
 import { storeToRefs } from 'pinia';
 
+import { useQuery } from '@vue/apollo-composable';
+import GetUserTodos from '~/model/graphql/getUserTodos.graphql.ts';
+
 const router = useRouter();
 const todosStore = useTodosStore();
+const usersList = ref(['f6e66dbb-8b54-4c44-9ea9-db1aa753ed62', 'e0886d1b-70bb-409c-b65d-c81baf060634']);
+const selectedUserIndex = ref(0);
 
 const initialError = ref<Error | undefined>(undefined);
 const { list: todos } = storeToRefs(todosStore);
@@ -46,6 +51,39 @@ const updateFilteredTodoList = () => {
   todosFiltered.value = getFilteredTodoListFromSearch(todos.value, todoSearchLowerCase.value);
 };
 
+const getSelectedUserId = computed(() => usersList.value[selectedUserIndex.value]);
+
+const { result, onResult } = useQuery(GetUserTodos, () => ({ userId: getSelectedUserId.value }));
+
+onResult(result => {
+  if (result.loading) {
+    stateInitial.value = LoadingState.LOADING;
+  } else if(!result.loading && !result.error) {
+    stateInitial.value = LoadingState.SUCCESS;
+    onInitialDataLoadingSuccess(result.data.todos);
+  }
+  if (!result.loading) {
+    restoreUserInputFromLocalStorage();
+  }
+  console.log('> useQuery -> onResult:', result);
+});
+watch(result, (value) => {
+  console.log('> useQuery -> watch:', value);
+});
+
+const onInitialDataLoadingSuccess = (list: TodosVO) => {
+  const newTodos = list.filter((item) => { return !todos.value.find((todo => todo.id === item.id)); });
+  todos.value.push(...newTodos);
+  updateFilteredTodoList();
+};
+
+const restoreUserInputFromLocalStorage = () => {
+  const userInputFromLS = localStorage.getItem(Storage.LOCAL_KEY__USER_TODO_INPUT);
+  if (userInputFromLS) {
+    todoText.value = userInputFromLS;
+  }
+};
+
 const fetchInitialData = () => {
   initialError.value = undefined;
   stateInitial.value = LoadingState.LOADING;
@@ -56,21 +94,14 @@ const fetchInitialData = () => {
       return data.list as TodosVO;
     })
     .then((list: TodosVO) => {
-      const newTodos = list.filter((item) => { return !todos.value.find((todo => todo.id === item.id)); });
-      todos.value.push(...newTodos);
-      updateFilteredTodoList();
+      onInitialDataLoadingSuccess(list);
       stateInitial.value = LoadingState.SUCCESS;
     })
     .catch((e) => {
       initialError.value = e;
       stateInitial.value = LoadingState.ERROR;
     })
-    .finally(() => {
-      const userInputFromLS = localStorage.getItem(Storage.LOCAL_KEY__USER_TODO_INPUT);
-      if (userInputFromLS) {
-        todoText.value = userInputFromLS;
-      }
-    });
+    .finally(restoreUserInputFromLocalStorage);
 };
 
 const onTodoInputChange = (text: string) => {
@@ -170,9 +201,11 @@ const onTodoItemDelete = (index: number) => {
 
 onMounted(() => {
   console.log('> App -> onMounted');
-  fetchInitialData();
 });
 
+watch(selectedUserIndex, (value, oldValue) => {
+  if (value !== oldValue) todos.value = [];
+});
 watch(todoText, (value) => {
   console.log('> App -> watch: todoText', { value, v: todoText.value });
   localStorage.setItem(Storage.LOCAL_KEY__USER_TODO_INPUT, value);
@@ -190,6 +223,11 @@ watch(todoSearch, (value) => {
 });
 </script>
 <template>
+  <select v-model="selectedUserIndex">
+    <option v-for="(userId, index) in usersList" :key="userId" :value="index">
+      {{ userId }}
+    </option>
+  </select>
   <TodoInput
     v-model:text="todoText"
     :locked="isInputLocked"

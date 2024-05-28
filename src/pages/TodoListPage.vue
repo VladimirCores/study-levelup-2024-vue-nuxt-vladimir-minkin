@@ -24,6 +24,9 @@ const router = useRouter();
 const todosStore = useTodosStore();
 const usersList = ref(['f6e66dbb-8b54-4c44-9ea9-db1aa753ed62', 'e0886d1b-70bb-409c-b65d-c81baf060634']);
 const selectedUserIndex = ref(0);
+const pageIndex = ref(0);
+const pageLimit = ref(3);
+let pageCount = -1;
 
 const initialError = ref<Error | undefined>(undefined);
 const { list: todos } = storeToRefs(todosStore);
@@ -52,14 +55,21 @@ const updateFilteredTodoList = () => {
 };
 
 const getSelectedUserId = computed(() => usersList.value[selectedUserIndex.value]);
+const getPageOffset = computed(() => pageIndex.value * pageLimit.value);
 
-const { result, onResult } = useQuery(GetUserTodos, () => ({ userId: getSelectedUserId.value }));
+const { result, onResult } = useQuery(GetUserTodos, () => (
+  {
+    userId: getSelectedUserId.value,
+    limit: pageLimit.value,
+    offset: getPageOffset.value
+  }));
 
 onResult(result => {
   if (result.loading) {
     stateInitial.value = LoadingState.LOADING;
   } else if(!result.loading && !result.error) {
     stateInitial.value = LoadingState.SUCCESS;
+    pageCount = Math.ceil(result.data.todos_aggregate?.aggregate.count / pageLimit.value);
     onInitialDataLoadingSuccess(result.data.todos);
   }
   if (!result.loading) {
@@ -206,6 +216,9 @@ onMounted(() => {
 watch(selectedUserIndex, (value, oldValue) => {
   if (value !== oldValue) todos.value = [];
 });
+watch(pageIndex, (value, oldValue) => {
+  if (value !== oldValue) todos.value = [];
+});
 watch(todoText, (value) => {
   console.log('> App -> watch: todoText', { value, v: todoText.value });
   localStorage.setItem(Storage.LOCAL_KEY__USER_TODO_INPUT, value);
@@ -262,6 +275,16 @@ watch(todoSearch, (value) => {
       </div>
     </template>
   </TodoList>
+  <div v-if="todos.length > 0" class="flex flex-col">
+    <select v-model="pageIndex">
+      <option v-for="(pageId, index) in pageCount" :key="pageId" :value="index">
+        {{ pageId }}
+      </option>
+    </select>
+    <div>
+      {{ pageIndex + 1 }} / {{ pageCount }}
+    </div>
+  </div>
   <Transition name="fade">
     <Notification
       v-if="isNotificationVisible"

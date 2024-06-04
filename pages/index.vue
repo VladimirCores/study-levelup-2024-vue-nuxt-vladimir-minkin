@@ -1,0 +1,26 @@
+<script setup lang="ts">
+const route = useRoute();
+const counter = ref(0);
+definePageMeta({
+  name: 'Index'
+})
+</script>
+<template>
+  <div>{{ route.name }}</div>
+  <div>
+    {{ counter }}
+    <button @click="counter++">+</button>
+  </div>
+  <details class="dropdown">
+    <summary class="m-1 btn">open or close</summary>
+    <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+      <li><a>Item 1</a></li>
+      <li><a>Item 2</a></li>
+    </ul>
+  </details>
+  <div>
+    <NuxtLink to="/cart">Cart</NuxtLink>
+    <NuxtLink to="/user">User</NuxtLink>
+    <NuxtLink to="/products">Products</NuxtLink>
+  </div>
+</template>

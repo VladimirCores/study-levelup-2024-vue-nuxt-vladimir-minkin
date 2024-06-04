@@ -2,5 +2,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   telemetry: false,
-  ssr: false
+  ssr: false,
+  modules: ["@nuxtjs/tailwindcss"]
 });

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import DataKeys from "~/constants/DataKeys";
-
-const { data } = useNuxtData(DataKeys.PRODUCTS);
+const { list } = useProducts();
 </script>
 <template>
   <div class="
@@ -9,7 +7,7 @@ const { data } = useNuxtData(DataKeys.PRODUCTS);
     place-items-start
     place-content-start
   ">
-    <div v-for="product in data.products" :key="product.id" class="h-full w-full">
+    <div v-for="product in list" :key="product.id" class="h-full w-full">
       <div class="card w-72 bg-base-100 shadow-xl image-full h-full w-full">
         <figure><img :src="product.thumbnail" alt="Shoes" /></figure>
         <div class="card-body h-full">

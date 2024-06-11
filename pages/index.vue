@@ -13,7 +13,7 @@ definePageMeta({
       <li><a>Item 2</a></li>
     </ul>
   </details>
-  <div>
+  <div class="flex flex-row space-x-2">
     <NuxtLink to="/cart">Cart</NuxtLink>
     <NuxtLink to="/user">User</NuxtLink>
     <NuxtLink to="/products">Products</NuxtLink>

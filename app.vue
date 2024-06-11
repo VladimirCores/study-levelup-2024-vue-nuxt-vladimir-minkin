@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import DataKeys from "~/constants/DataKeys";
 
-const { data, pending, refresh } = await useFetch('https://dummyjson.com/products?limit=10', {
-  immediate: false,
-  key: DataKeys.PRODUCTS
-});
-onMounted(() => {
-  refresh();
-})
+const products = useProducts();
+const uid = useCookie<number>('uid');
+
+uid.value = 123;
+const { pending } = products.retrieve(10, true);
+console.log('> app -> setup: refresh')
 </script>
 <template>
   <Spinner v-if="pending"/>

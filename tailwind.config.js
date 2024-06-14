@@ -23,7 +23,7 @@ export default {
   plugins: [daisyui],
   daisyui: {
     themes: [
-      "winter",
+      "cmyk",
     ],
   }
 }

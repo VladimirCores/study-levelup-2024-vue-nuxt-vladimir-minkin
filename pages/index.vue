@@ -1,21 +1,9 @@
 <script setup lang="ts">
-const counter = ref(0);
-definePageMeta({
-  name: 'Index'
-})
+import Routes from "~/constants/Routes";
 </script>
 <template>
-  <Counter/>
-  <details class="dropdown">
-    <summary class="m-1 btn">open or close</summary>
-    <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-      <li><a>Item 1</a></li>
-      <li><a>Item 2</a></li>
-    </ul>
-  </details>
   <div class="flex flex-row space-x-2">
-    <NuxtLink to="/cart">Cart</NuxtLink>
-    <NuxtLink to="/user">User</NuxtLink>
-    <NuxtLink to="/products">Products</NuxtLink>
+    <NuxtLink :to="Routes.CARD">Cart</NuxtLink>
+    <NuxtLink :to="Routes.PRODUCTS">Products</NuxtLink>
   </div>
 </template>

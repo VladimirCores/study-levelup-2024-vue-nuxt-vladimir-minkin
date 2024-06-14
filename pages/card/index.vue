@@ -8,5 +8,4 @@ const onBackLinkClick = () => {
 </script>
 <template>
   <div>{{ route.name }}</div>
-  <a @click.prevent="onBackLinkClick" class="underline">Back</a>
 </template>

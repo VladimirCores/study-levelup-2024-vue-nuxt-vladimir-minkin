@@ -15,6 +15,7 @@
     "nuxt": "^3.11.2"
   },
   "devDependencies": {
+    "@iconify/vue": "^4.1.2",
     "daisyui": "^4.11.1"
   }
 }

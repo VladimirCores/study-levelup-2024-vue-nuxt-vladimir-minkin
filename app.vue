@@ -1,10 +1,17 @@
 <script setup lang="ts">
-
 const products = useProducts();
+const card = useCard();
 const uid = useCookie<number>('uid');
 
 uid.value = 123;
-const { pending } = products.retrieve(10, true);
+
+const { data, pending } = products.retrieve(10, true);
+
+watch(data, (value) => {
+  console.log('> App -> watch: data =', value);
+  products.setup(value);
+  card.restore(products.list.value);
+});
 console.log('> app -> setup: refresh')
 </script>
 <template>
